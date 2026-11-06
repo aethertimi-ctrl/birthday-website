@@ -16,18 +16,19 @@
       --shadow: 0 24px 70px rgba(50, 12, 30, .16);
     }
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; color: var(--ink); background: var(--cream); font-family: "DM Sans", sans-serif; overflow-x: hidden; }
+    html { scroll-behavior: smooth; background: #260817; overscroll-behavior: none; }
+    body { margin: 0; overscroll-behavior: none; color: var(--ink); background: var(--cream); font-family: "DM Sans", sans-serif; overflow-x: hidden; }
     button { font: inherit; }
     a { color: inherit; }
     .loader { position: fixed; inset: 0; z-index: 99; display: grid; place-items: center; background: var(--wine); color: var(--gold); transition: opacity .7s, visibility .7s; }
+    body.locked { overflow: hidden; height: 100vh; height: 100dvh; }
     .loader.hidden { opacity: 0; visibility: hidden; }
     .loader-inner { text-align: center; }
     .loader-heart { font-size: 2.4rem; animation: pulse 1s infinite; }
     .open-btn { margin-top: 22px; }
     .loader p { font: 1.5rem "Great Vibes", cursive; letter-spacing: 1px; }
     @keyframes pulse { 50% { transform: scale(1.2); } }
-    .topbar { position: absolute; top: 0; left: 0; width: 100%; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 24px 7%; color: white; }
+    .topbar { position: absolute; top: 0; left: 0; width: 100%; z-index: 5; display: flex; justify-content: center; align-items: center; padding: 24px 7%; color: white; }
     .brand { font: 1.7rem "Great Vibes", cursive; color: var(--gold); }
     .topbar a { text-decoration: none; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
     .hero { min-height: 760px; height: 100svh; max-height: 980px; position: relative; display: grid; place-items: center; text-align: center; overflow: hidden; color: white; background: radial-gradient(ellipse at 50% 40%, rgba(128,47,75,.6), transparent 48%), linear-gradient(135deg, #260817, #57152f 55%, #2d0a1b); padding: 110px 22px 70px; }
@@ -42,6 +43,7 @@
     .hero-copy { max-width: 580px; margin: 26px auto 30px; color: rgba(255,255,255,.82); line-height: 1.9; font-size: .98rem; }
     .pill { display: inline-flex; align-items: center; gap: 10px; padding: 13px 23px; border: 1px solid rgba(217,180,124,.65); border-radius: 50px; color: var(--gold); background: rgba(255,255,255,.06); text-decoration: none; letter-spacing: .08em; font-size: .75rem; text-transform: uppercase; transition: .3s; cursor: pointer; }
     .pill:hover { background: var(--gold); color: var(--wine); transform: translateY(-3px); }
+    .letter-link { display: block; width: max-content; margin: 0 auto 12px; padding: 8px 4px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(217,180,124,.5); letter-spacing: .2em; }
     .scroll-note { position: absolute; bottom: 26px; left: 0; right: 0; z-index: 2; color: rgba(255,255,255,.65); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; }
     .sparkle { position: absolute; color: var(--gold); opacity: .65; animation: float 6s ease-in-out infinite; pointer-events: none; }
     .s1 { top: 22%; left: 14%; } .s2 { top: 32%; right: 15%; animation-delay: -2s; } .s3 { bottom: 23%; left: 23%; animation-delay: -4s; }
@@ -109,9 +111,13 @@
     .secret-text { display: none; font: 1.55rem/1.7 "Great Vibes",cursive; color: var(--wine); margin-top: 24px; }
     .secret-text.show { display: block; animation: appear .7s both; }
     :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .music-control { position: fixed; right: 20px; bottom: 20px; z-index: 10; width: 52px; height: 52px; border: 1px solid var(--gold); border-radius: 50%; background: var(--wine); color: var(--gold); font-size: 1.2rem; box-shadow: 0 8px 25px rgba(0,0,0,.2); cursor: pointer; }
-    footer { padding: 45px 20px; text-align: center; background: #260817; color: rgba(255,255,255,.7); }
+    .toast { position: fixed; left: 50%; bottom: 30px; z-index: 40; max-width: 86vw; padding: 11px 18px; border-radius: 30px; background: var(--wine); color: var(--gold); border: 1px solid var(--gold); font-size: .82rem; text-align: center; opacity: 0; visibility: hidden; transform: translate(-50%, 10px); transition: opacity .3s, transform .3s, visibility .3s; }
+    .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .music-control { position: fixed; right: 16px; top: 16px; z-index: 25; width: 52px; height: 52px; border: 1px solid var(--gold); border-radius: 50%; background: var(--wine); color: var(--gold); font-size: 1.2rem; box-shadow: 0 8px 25px rgba(0,0,0,.2); cursor: pointer; }
+    footer { padding: 45px 20px 95px; text-align: center; background: #260817; color: rgba(255,255,255,.7); }
     footer strong { display: block; font: 2rem "Great Vibes",cursive; color: var(--gold); margin-bottom: 8px; }
+    .veil { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, rgba(60,14,36,.82), rgba(14,3,9,.92)); opacity: 0; transition: opacity .8s; }
+    .veil.on { opacity: 1; }
     #fireworks { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
     @media (max-width: 760px) {
       section { padding: 75px 6%; }
@@ -122,10 +128,11 @@
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   </style>
 </head>
-<body>
+<body class="locked">
   <div class="loader" id="loader"><div class="loader-inner"><div class="loader-heart">♡</div><p>A little something is waiting for you...</p><button class="pill open-btn" id="open-message">Open your message ♡</button></div></div>
+  <div class="veil" id="veil"></div>
   <canvas id="fireworks"></canvas>
-  <header class="topbar"><div class="brand">A day for Model ♡</div><a href="#letter">Read your letter</a></header>
+  <header class="topbar"><div class="brand">A day for Model ♡</div></header>
 
   <main>
     <section class="hero" id="home">
@@ -137,7 +144,7 @@
         <p class="hero-copy">Today is all about you — your magic, your laughter, your softness, your fire, and every little thing that makes you wonderfully YOU. This new chapter looks beautiful on you.</p>
         <a class="pill" href="#letter">Enter your birthday world <span>♡</span></a>
       </div>
-      <div class="scroll-note">Scroll slowly · this little world is yours</div>
+      <div class="scroll-note"><a class="letter-link" href="#letter">Read your letter ↓</a><span>Scroll slowly · this little world is yours</span></div>
     </section>
 
     <section id="letter">
@@ -194,6 +201,7 @@
   </main>
 
   <footer><strong>To Model, my Devil’ Queen ♡</strong>May this new chapter be your most beautiful yet.<br><small>Made with love by your best friend · 06 November 2026</small></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <button class="music-control" id="music-toggle" aria-label="Play or pause birthday song">♫</button>
 
   <script>
@@ -232,16 +240,36 @@
 
     // Birthday song: starts when she taps "Open your message" (browsers only allow sound after a tap).
     const song = $('birthday-song');
+    const musicBtn = $('music-toggle');
+    let wasPlaying = false, toastTimer = null;
     song.volume = 0.7;
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 4200);
+    }
+    async function playSong() {
+      try { await song.play(); }
+      catch (err) {
+        if (err && err.name === 'AbortError') return;                 // interrupted by a pause: not a real failure
+        toast(song.error ? 'The song could not be loaded.' : 'Tap the ♫ button to start the music.');
+      }
+    }
     $('open-message').addEventListener('click', () => {
       $('loader').classList.add('hidden');
-      song.play().catch(() => {});
+      document.body.classList.remove('locked');
+      window.scrollTo(0, 0);
+      playSong();                                                      // runs inside the tap, so browsers allow sound
     });
-    $('music-toggle').addEventListener('click', () => {
-      if (song.paused) song.play().catch(() => {}); else song.pause();
+    musicBtn.addEventListener('click', () => { if (song.paused) playSong(); else song.pause(); });
+    song.addEventListener('play',  () => { musicBtn.textContent = 'Ⅱ'; musicBtn.setAttribute('aria-pressed', 'true'); });
+    song.addEventListener('pause', () => { musicBtn.textContent = '♫'; musicBtn.setAttribute('aria-pressed', 'false'); });
+    song.addEventListener('error', () => toast('The song could not be loaded.'));
+    song.querySelector('source').addEventListener('error', () => toast('The song could not be loaded.'));
+    // Pause when the phone is locked or she switches apps, and resume when she returns.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { wasPlaying = !song.paused; song.pause(); }
+      else if (wasPlaying) { wasPlaying = false; playSong(); }
     });
-    song.addEventListener('play', () => $('music-toggle').textContent = 'Ⅱ');
-    song.addEventListener('pause', () => $('music-toggle').textContent = '♫');
 
     // Fireworks show: rising rockets, trailing sparks, heart / ring / peony / willow bursts, glitter finale.
     const canvas = $('fireworks'), ctx = canvas.getContext('2d');
@@ -336,12 +364,13 @@
 
       ctx.globalCompositeOperation = 'source-over';
       if (sparks.length || rockets.length || performance.now() < showUntil) raf = requestAnimationFrame(frame);
-      else { raf = null; ctx.clearRect(0, 0, W, H); }
+      else { raf = null; ctx.clearRect(0, 0, W, H); $('veil').classList.remove('on'); }
     }
 
     function launchFireworks() {
       const count = reduceMotion ? 4 : 16;
       showUntil = performance.now() + count * 380 + 2500;
+      $('veil').classList.add('on');
       // opening salvo, then a steady build
       for (let i = 0; i < count; i++) setTimeout(() => launch(i === 0 ? 'heart' : null), i * 380 + rand(0, 150));
       // grand finale: a wall of bursts
